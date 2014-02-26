@@ -3,6 +3,17 @@
 # Require this file using `require "spec_helper"` to ensure that it is only
 # loaded once.
 #
+RSpec::Matchers.define :be_sorted_like do |expected_array|
+  # Items with same totals are ordered unpredictably; we only care that
+  # items with different totals are ordered correctly
+  match do |actual_array|
+    same_elements       = (actual_array.map(&:sort).sort == expected_array.map(&:sort).sort)
+    same_final_elements = actual_array.map(&:last) == expected_array.map(&:last)
+    puts "booleans #{same_elements} #{same_final_elements}"
+    same_elements && same_final_elements
+  end
+end
+#
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
   config.treat_symbols_as_metadata_keys_with_true_values = true
