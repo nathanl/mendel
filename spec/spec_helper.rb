@@ -2,16 +2,16 @@
 # specs live under a `spec` directory, which RSpec adds to the `$LOAD_PATH`.
 # Require this file using `require "spec_helper"` to ensure that it is only
 # loaded once.
-#
 RSpec::Matchers.define :be_sorted_like do |expected_array|
   require 'set'
   # Items with same totals are ordered unpredictably; we only care that
   # items with different totals are ordered correctly
   match do |actual_array|
-    same_elements       = Set.new(actual_array) == Set.new(expected_array)
-    same_final_elements = actual_array.map(&:last) == expected_array.map(&:last)
-    # puts "booleans #{same_elements} #{same_final_elements}"
-    same_elements && same_final_elements
+    same_length         = actual_array.length      == expected_array.length
+    same_uniques        = Set.new(actual_array)    == Set.new(expected_array)
+    same_sort_keys      = actual_array.map(&:last) == expected_array.map(&:last)
+    # puts "#{same_length} && #{same_uniques} && #{same_sort_keys}"
+    same_length && same_uniques && same_sort_keys
   end
 end
 #
@@ -27,3 +27,14 @@ RSpec.configure do |config|
   #     --seed 1234
   config.order = 'random'
 end
+
+def sorted_combos(list1, list2)
+  results = []
+  list1.each do |l1|
+    list2.each do |l2|
+      results << [l1, l2, l1 + l2]
+    end
+  end
+  results.sort_by(&:last)
+end
+

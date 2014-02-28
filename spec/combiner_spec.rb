@@ -13,7 +13,7 @@ describe Mendel::Combiner do
   describe "when both lists increment smoothly" do
     let(:list2) { EXAMPLE_INPUT[:incrementing_decimals] }
 
-    it "gets the top N results" do
+    it "gets the results in the right order" do
       require_relative "fixtures/example_output/inc_integers_w_inc_decimals"
       expect(results).to be_sorted_like($inc_integers_w_inc_decimals)
     end
@@ -23,12 +23,9 @@ describe Mendel::Combiner do
   describe "when the second list has repeats" do
     let(:list2) { EXAMPLE_INPUT[:repeats] }
 
-    it "gets the top N results" do
-      pending "getting our priority queue to dedupe?"
+    it "gets the results in the right order" do
       require_relative "fixtures/example_output/inc_integers_w_repeats"
-      puts "lengths are #{combiner.results.length} and #{$inc_integers_w_repeats.length}"
-      the_end = 25
-      expect(combiner.results[0..the_end]).to be_sorted_like($inc_integers_w_repeats[0..the_end])
+      expect(combiner.results).to be_sorted_like($inc_integers_w_repeats)
     end
 
   end
@@ -36,7 +33,7 @@ describe Mendel::Combiner do
   describe "when the second list has skips" do
     let(:list2) { EXAMPLE_INPUT[:skips] }
 
-    it "gets the top N results" do
+    it "gets the results in the right order" do
       require_relative "fixtures/example_output/inc_integers_w_skips"
       expect(combiner.results).to be_sorted_like($inc_integers_w_skips)
     end
@@ -46,8 +43,7 @@ describe Mendel::Combiner do
   describe "when the second list has repeats AND skips" do
     let(:list2) { EXAMPLE_INPUT[:repeats_and_skips] }
 
-    it "gets the top N results" do
-      pending "getting our priority queue to dedupe?"
+    it "gets the results in the right order" do
       require_relative "fixtures/example_output/inc_integers_w_repeats_and_skips"
       expect(combiner.results).to be_sorted_like($inc_integers_w_repeats_and_skips)
     end
@@ -55,6 +51,12 @@ describe Mendel::Combiner do
   end
 
   describe "when the lists are different lengths" do
+    let(:list2) { EXAMPLE_INPUT[:short_list] }
+
+    it "gets the results in the right order" do
+      require_relative "fixtures/example_output/different_lengths"
+      expect(combiner.results).to be_sorted_like($different_lengths)
+    end
 
   end
 
@@ -82,7 +84,7 @@ describe Mendel::Combiner do
       end
     }
 
-    it "does fine" do
+    it "gets the results in the right order" do
       expect(combiner.results).to be_sorted_like(sorted_combos)
     end
   end

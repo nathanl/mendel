@@ -1,5 +1,6 @@
 require "mendel/version"
 require "priority_queue"
+require "set"
 
 module Mendel
 
@@ -21,6 +22,10 @@ module Mendel
       results
     end
 
+    def seen_set
+      @seen ||= Set.new
+    end
+
     def pull_result
       result = priority_queue.delete_min
       raise NullError if result.nil?
@@ -31,6 +36,8 @@ module Mendel
     end
 
     def add_coords(coordinates)
+      return if seen_set.include?(coordinates)
+      seen_set << coordinates
       combo = combo_at(coordinates)
       priority_queue.push(combo, combo[:score])
     end
