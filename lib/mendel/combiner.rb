@@ -1,5 +1,5 @@
 require "mendel/version"
-require "priority_queue"
+require "mendel/min_priority_queue"
 require "set"
 
 module Mendel
@@ -9,7 +9,7 @@ module Mendel
 
     def initialize(*lists)
       self.lists          = lists
-      self.priority_queue = PriorityQueue.new
+      self.priority_queue = MinPriorityQueue.new
       add_coords(lists.map {0} )
     end
 
@@ -27,7 +27,7 @@ module Mendel
     end
 
     def pull_result
-      result = priority_queue.delete_min
+      result = priority_queue.pop
       raise NullError if result.nil?
       result = result[0]
       children_coordinates = next_steps_from(result.fetch(:coordinates))

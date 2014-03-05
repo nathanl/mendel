@@ -1,6 +1,5 @@
 # TODO
 
-- Wrap priority queue in own class in case want to swap out
 - Return a lazy enumerator
 - Make it possible to dump/load state of combiner
 - Benchmark!
