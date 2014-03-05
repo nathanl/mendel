@@ -5,17 +5,17 @@ require_relative "fixtures/example_input"
 describe Mendel::Combiner do
 
   let(:combiner_class) { described_class }
-  let(:combiner)       { combiner_class.new(list1, list2, PriorityQueue.new) }
+  let(:combiner)       { combiner_class.new(list1, list2) }
 
-  let(:list1) { EXAMPLE_INPUT[:incrementing_integers] }
-  let(:results) {combiner.results}
+  let(:list1)          { EXAMPLE_INPUT[:incrementing_integers] }
+  let(:all_results)    { combiner.results }
 
   describe "when both lists increment smoothly" do
     let(:list2) { EXAMPLE_INPUT[:incrementing_decimals] }
 
-    it "gets the results in the right order" do
+    it "has a complete result set that is ordered correctly" do
       require_relative "fixtures/example_output/inc_integers_w_inc_decimals"
-      expect(results).to be_sorted_like($inc_integers_w_inc_decimals)
+      expect(all_results).to be_sorted_like($inc_integers_w_inc_decimals)
     end
 
   end
@@ -23,9 +23,9 @@ describe Mendel::Combiner do
   describe "when the second list has repeats" do
     let(:list2) { EXAMPLE_INPUT[:repeats] }
 
-    it "gets the results in the right order" do
+    it "has a complete result set that is ordered correctly" do
       require_relative "fixtures/example_output/inc_integers_w_repeats"
-      expect(combiner.results).to be_sorted_like($inc_integers_w_repeats)
+      expect(all_results).to be_sorted_like($inc_integers_w_repeats)
     end
 
   end
@@ -33,9 +33,9 @@ describe Mendel::Combiner do
   describe "when the second list has skips" do
     let(:list2) { EXAMPLE_INPUT[:skips] }
 
-    it "gets the results in the right order" do
+    it "has a complete result set that is ordered correctly" do
       require_relative "fixtures/example_output/inc_integers_w_skips"
-      expect(combiner.results).to be_sorted_like($inc_integers_w_skips)
+      expect(all_results).to be_sorted_like($inc_integers_w_skips)
     end
 
   end
@@ -43,9 +43,9 @@ describe Mendel::Combiner do
   describe "when the second list has repeats AND skips" do
     let(:list2) { EXAMPLE_INPUT[:repeats_and_skips] }
 
-    it "gets the results in the right order" do
+    it "has a complete result set that is ordered correctly" do
       require_relative "fixtures/example_output/inc_integers_w_repeats_and_skips"
-      expect(combiner.results).to be_sorted_like($inc_integers_w_repeats_and_skips)
+      expect(all_results).to be_sorted_like($inc_integers_w_repeats_and_skips)
     end
 
   end
@@ -53,9 +53,9 @@ describe Mendel::Combiner do
   describe "when the lists are different lengths" do
     let(:list2) { EXAMPLE_INPUT[:short_list] }
 
-    it "gets the results in the right order" do
+    it "has a complete result set that is ordered correctly" do
       require_relative "fixtures/example_output/different_lengths"
-      expect(combiner.results).to be_sorted_like($different_lengths)
+      expect(all_results).to be_sorted_like($different_lengths)
     end
 
   end
@@ -84,8 +84,8 @@ describe Mendel::Combiner do
       end
     }
 
-    it "gets the results in the right order" do
-      expect(combiner.results).to be_sorted_like(sorted_combos)
+    it "has a complete result set that is ordered correctly" do
+      expect(all_results).to be_sorted_like(sorted_combos)
     end
   end
 

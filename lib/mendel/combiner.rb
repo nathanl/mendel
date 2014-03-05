@@ -7,9 +7,9 @@ module Mendel
   class Combiner
     attr_accessor :lists, :priority_queue
 
-    def initialize(*lists, priority_queue)
+    def initialize(*lists)
       self.lists          = lists
-      self.priority_queue = priority_queue
+      self.priority_queue = PriorityQueue.new
       add_coords(lists.map {0} )
     end
 
