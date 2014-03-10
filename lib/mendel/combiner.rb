@@ -9,18 +9,23 @@ module Mendel
 
     def initialize(*lists)
       self.lists          = lists
+      self.combinations   = []
       self.priority_queue = MinPriorityQueue.new
       add_coords(lists.map {0} )
     end
 
     def results
-      results = []
       loop do
-        results << pull_result
+        result = pull_result
+        break if result == :none
+        combinations << result
       end
-    rescue NullError
-      results
+      combinations
     end
+
+    private
+
+    attr_accessor :combinations
 
     def seen_set
       @seen ||= Set.new
@@ -28,7 +33,7 @@ module Mendel
 
     def pull_result
       result = priority_queue.pop
-      raise NullError if result.nil?
+      return :none if result.nil?
       result = result[0]
       children_coordinates = next_steps_from(result.fetch(:coordinates))
       children_coordinates.each {|co| add_coords(co) }
@@ -97,6 +102,5 @@ module Mendel
       index <= (array.length - 1) && index >= (0 - array.length)
     end
 
-    NullError = Class.new(StandardError)
   end
 end
