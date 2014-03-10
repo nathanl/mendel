@@ -18,7 +18,7 @@ module Mendel
 
     # TODO - how to ensure this can work with .lazy?
     def each
-      return Enumerator.new(self) unless block_given?
+      return self.to_enum unless block_given?
       combinations.each { |c| yield c}
       loop do
         combo = next_combination

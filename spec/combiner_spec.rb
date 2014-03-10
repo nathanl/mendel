@@ -95,13 +95,48 @@ describe Mendel::Combiner do
 
   describe "enumeration" do
 
-    it "supports external enumeration" # text .each and .next on result
+    let(:combiner) { described_class.new([1,2], [1.1, 2.1]) }
 
-    it "supports internal enumeration" # test .each with block
+    it "supports external enumeration" do
+      enum = combiner.each
+      expect(enum.next).to eq([1, 1.1, 2.1])
+      expect(enum.next).to eq([2, 1.1, 3.1])
+    end
 
-    it "is Enumerable" # test .map
+    it "supports internal enumeration" do
+      combos = []
+      combiner.each do |combo|
+        combos << combo
+      end
+      expect(combos.length).to eq(4)
+    end
 
-    it "supports lazy enumeration"
+    it "is Enumerable" do
+      expect(combiner).to be_a(Enumerable)
+    end
+
+    it "supports enumerable operations" do
+      expect(combiner.map {|c| c[-1] }).to eq([2.1, 3.1, 3.1, 4.1])
+    end
+
+    describe "laziness" do
+
+      it "supports lazy enumeration" do
+        outs = []
+        m = combiner.each.lazy.map { outs << 'first map' }.map { outs << 'second map' }
+        m.next
+        m.next
+        expect(outs).to eq(['first map', 'second map', 'first map', 'second map'])
+      end
+
+      it "doesn't sneakily build all combinations just to return one" do
+        e = combiner.each
+        e.next
+        # I'M SORRY MR OBJECT, PLEASE FORGIVE THE INTRUSION
+        expect(combiner.send(:combinations).length).to eq(1)
+      end
+
+    end
 
   end
 
