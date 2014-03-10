@@ -16,7 +16,9 @@ module Mendel
       add_coords(lists.map {0} )
     end
 
+    # TODO - how to ensure this can work with .lazy?
     def each
+      return Enumerator.new(self) unless block_given?
       combinations.each { |c| yield c}
       loop do
         combo = next_combination
