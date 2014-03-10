@@ -5,6 +5,8 @@ require "set"
 module Mendel
 
   class Combiner
+    include Enumerable
+
     attr_accessor :lists, :priority_queue
 
     def initialize(*lists)
@@ -14,13 +16,13 @@ module Mendel
       add_coords(lists.map {0} )
     end
 
-    def results
+    def each
+      combinations.each { |c| yield c}
       loop do
-        result = pull_result
-        break if result == :none
-        combinations << result
+        combo = next_combination
+        break if combo == :none
+        yield combo
       end
-      combinations
     end
 
     private
@@ -31,13 +33,15 @@ module Mendel
       @seen ||= Set.new
     end
 
-    def pull_result
-      result = priority_queue.pop
-      return :none if result.nil?
-      result = result[0]
-      children_coordinates = next_steps_from(result.fetch(:coordinates))
+    def next_combination
+      combo = priority_queue.pop
+      return :none if combo.nil?
+      combo = combo[0]
+      children_coordinates = next_steps_from(combo.fetch(:coordinates))
       children_coordinates.each {|co| add_coords(co) }
-      [result.fetch(:items), result.fetch(:score)].flatten
+      [combo.fetch(:items), combo.fetch(:score)].flatten.tap { |combination|
+        combinations << combination
+      }
     end
 
     def add_coords(coordinates)

@@ -8,7 +8,7 @@ describe Mendel::Combiner do
   let(:combiner)       { combiner_class.new(list1, list2) }
 
   let(:list1)          { EXAMPLE_INPUT[:incrementing_integers] }
-  let(:all_results)    { combiner.results }
+  let(:all_results)    { combiner.to_a }
 
   describe "when both lists increment smoothly" do
     let(:list2) { EXAMPLE_INPUT[:incrementing_decimals] }
