@@ -16,7 +16,6 @@ module Mendel
       add_coords(lists.map {0} )
     end
 
-    # TODO - how to ensure this can work with .lazy?
     def each
       return self.to_enum unless block_given?
       combinations.each { |c| yield c}

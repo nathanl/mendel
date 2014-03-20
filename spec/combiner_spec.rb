@@ -124,8 +124,7 @@ describe Mendel::Combiner do
       it "supports lazy enumeration" do
         outs = []
         m = combiner.each.lazy.map { outs << 'first map' }.map { outs << 'second map' }
-        m.next
-        m.next
+        2.times { m.next }
         expect(outs).to eq(['first map', 'second map', 'first map', 'second map'])
       end
 
@@ -135,6 +134,38 @@ describe Mendel::Combiner do
         # I'M SORRY MR OBJECT, PLEASE FORGIVE THE INTRUSION
         expect(combiner.send(:combinations).length).to eq(1)
       end
+
+    end
+
+  end
+
+  describe "dumping and loading state" do
+
+    let(:combiner) { described_class.new([1,2,3], [1.1, 2.1, 3.1]) }
+
+    context "when it has produced some combinations" do
+
+      before :each do
+        enum = combiner.each
+        2.times { enum.next }
+      end
+
+      # NOTE
+      # state exists in:
+      # - lists passed in
+      # - seen_set (coordinates tried)
+      # - items in priority_queue (previously built but not returned)
+      # - combinations (previously returned)
+
+      it "can dump its state"
+
+    end
+
+    context "when state has been dumped somewhere" do
+
+      it "can load state"
+
+      it "can begin producing combinations again from that point"
 
     end
 
