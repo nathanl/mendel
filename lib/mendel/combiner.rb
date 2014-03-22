@@ -25,7 +25,7 @@ module Mendel
     end
 
     def dump
-      {input: lists, seen: seen_set.to_a, queued: priority_queue.dump }
+      {'input' => lists, 'seen' => seen_set.to_a, 'queued' => priority_queue.dump }
     end
 
     def dump_json
@@ -33,7 +33,16 @@ module Mendel
     end
 
     def self.load(data)
-      new
+      instance = new(*data.fetch('input'))
+      instance.instance_eval {
+        self.seen_set       = Set.new(data.fetch('seen'))
+        self.priority_queue = MinPriorityQueue.new.tap {|q| q.load(data.fetch('queued'))}
+      }
+      instance
+    end
+
+    def self.load_json(json)
+      self.load(JSON.parse(json))
     end
 
     private
@@ -42,26 +51,31 @@ module Mendel
       @seen ||= Set.new
     end
 
+    def seen_set=(set)
+      @seen = set
+    end
+
     def next_combination
       combo = priority_queue.pop
       return :none if combo.nil?
       combo = combo[0]
-      children_coordinates = next_steps_from(combo.fetch(:coordinates))
+      children_coordinates = next_steps_from(combo.fetch('coordinates'))
       children_coordinates.each {|co| queue_combo_at(co) }
-      [combo.fetch(:items), combo.fetch(:score)].flatten
+      [combo.fetch('items'), combo.fetch('score')].flatten
     end
 
     def queue_combo_at(coordinates)
       return if seen_set.include?(coordinates)
       seen_set << coordinates
       combo = combo_at(coordinates)
-      priority_queue.push(combo, combo[:score])
+      priority_queue.push(combo, combo.fetch('score'))
     end
 
     def combo_at(coordinates)
       return unless valid_for_lists?(coordinates, lists)
       items = lists.each_with_index.map {|list, i| list[coordinates[i]] }
-      {items: items, coordinates: coordinates, score: score_combination(items)}
+      # TODO - store these strings in constants so we don't allocate tons of identical ones
+      {'items' => items, 'coordinates' => coordinates, 'score' => score_combination(items)}
     end
 
     # Override on instance if you like

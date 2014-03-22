@@ -31,6 +31,7 @@ module Mendel
       JSON.dump(dump)
     end
 
+    # TODO - make the load methods class methods
     def load(items)
       items.each do |item|
         push(*item)

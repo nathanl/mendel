@@ -121,11 +121,11 @@ describe Mendel::Combiner do
 
       let(:dumped) {
         {
-          input: [list1, list2], seen: [[0, 0], [1, 0], [0, 1], [2, 0], [1, 1], [0, 2]],
-          queued: [
-            [{:items=>[2, 2.1], :coordinates=>[1, 1], :score=>4.1}, 4.1], 
-            [{:items=>[3, 1.1], :coordinates=>[2, 0], :score=>4.1}, 4.1],
-            [{:items=>[1, 3.1], :coordinates=>[0, 2], :score=>4.1}, 4.1],
+          'input' => [list1, list2], 'seen' => [[0, 0], [1, 0], [0, 1], [2, 0], [1, 1], [0, 2]],
+          'queued' => [
+            [{'items' =>[2, 2.1], 'coordinates' =>[1, 1], 'score' => 4.1}, 4.1], 
+            [{'items' =>[3, 1.1], 'coordinates' =>[2, 0], 'score' => 4.1}, 4.1],
+            [{'items' =>[1, 3.1], 'coordinates' =>[0, 2], 'score' => 4.1}, 4.1],
           ]
         }
       }
@@ -138,19 +138,39 @@ describe Mendel::Combiner do
         expect(combiner.dump_json).to eq(JSON.dump(dumped))
       end
 
-    end
+      context "when state has been dumped somewhere" do
 
-    context "when state has been dumped somewhere" do
+        context "as a hash" do
 
-      before :each do
-        @dumped_data = combiner.dump
+          let!(:dumped_data) { combiner.dump }
+
+          it "can load state" do
+            expect(Mendel::Combiner.load(dumped_data)).to be_a(Mendel::Combiner)
+          end
+
+          it "can begin producing combinations again from that point" do
+            combiner = Mendel::Combiner.load(dumped_data)
+            expect(combiner.take(3)).to be_sorted_like([[2, 2.1, 4.1], [3, 1.1, 4.1], [1, 3.1, 4.1]])
+          end
+
+        end
+
+        context "as json" do
+
+          let!(:dumped_json) { combiner.dump_json }
+
+          it "can load state" do
+            expect(Mendel::Combiner.load_json(dumped_json)).to be_a(Mendel::Combiner)
+          end
+
+          it "can begin producing combinations again from that point" do
+            combiner = Mendel::Combiner.load_json(dumped_json)
+            expect(combiner.take(3)).to be_sorted_like([[2, 2.1, 4.1], [3, 1.1, 4.1], [1, 3.1, 4.1]])
+          end
+
+        end
+
       end
-
-      it "can load state" do
-        expect(Mendel::Combiner.load(@dumped_data)).to be_a(Mendel::Combiner)
-      end
-
-      it "can begin producing combinations again from that point"
 
     end
 
