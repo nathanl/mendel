@@ -11,14 +11,12 @@ module Mendel
 
     def initialize(*lists)
       self.lists          = lists
-      self.combinations   = []
       self.priority_queue = MinPriorityQueue.new
       add_coords(lists.map {0} )
     end
 
     def each
       return self.to_enum unless block_given?
-      combinations.each { |c| yield c}
       loop do
         combo = next_combination
         break if combo == :none
@@ -26,9 +24,14 @@ module Mendel
       end
     end
 
-    private
+    def dump
+    end
 
-    attr_accessor :combinations
+    def self.load(data)
+      new
+    end
+
+    private
 
     def seen_set
       @seen ||= Set.new
@@ -40,9 +43,7 @@ module Mendel
       combo = combo[0]
       children_coordinates = next_steps_from(combo.fetch(:coordinates))
       children_coordinates.each {|co| add_coords(co) }
-      [combo.fetch(:items), combo.fetch(:score)].flatten.tap { |combination|
-        combinations << combination
-      }
+      [combo.fetch(:items), combo.fetch(:score)].flatten
     end
 
     def add_coords(coordinates)
