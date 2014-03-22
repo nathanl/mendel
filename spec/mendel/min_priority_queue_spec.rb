@@ -7,11 +7,23 @@ describe Mendel::MinPriorityQueue do
 
   describe "basic functionality" do
 
-    it "can add an item"
+    it "can add items and pop an item of the lowest priority" do
+      queue.push('b', 2)
+      queue.push('a', 1)
+      queue.push('c', 3)
+      expect(queue.pop).to eq(['a', 1])
+    end
 
-    it "can pop an item of the lowest priority"
-
-    it "can report its length"
+    it "can report its length" do
+      expect(queue.length).to eq(0)
+      queue.push('b', 2)
+      queue.push('a', 1)
+      expect(queue.length).to eq(2)
+      queue.pop
+      expect(queue.length).to eq(1)
+      2.times { queue.pop }
+      expect(queue.length).to eq(0) # not -1
+    end
 
   end
 

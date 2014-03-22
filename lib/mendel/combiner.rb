@@ -12,7 +12,7 @@ module Mendel
     def initialize(*lists)
       self.lists          = lists
       self.priority_queue = MinPriorityQueue.new
-      add_coords(lists.map {0} )
+      queue_combo_at(lists.map {0} )
     end
 
     def each
@@ -25,6 +25,11 @@ module Mendel
     end
 
     def dump
+      {input: lists, seen: seen_set.to_a, queued: priority_queue.dump }
+    end
+
+    def dump_json
+      JSON.dump(dump)
     end
 
     def self.load(data)
@@ -42,11 +47,11 @@ module Mendel
       return :none if combo.nil?
       combo = combo[0]
       children_coordinates = next_steps_from(combo.fetch(:coordinates))
-      children_coordinates.each {|co| add_coords(co) }
+      children_coordinates.each {|co| queue_combo_at(co) }
       [combo.fetch(:items), combo.fetch(:score)].flatten
     end
 
-    def add_coords(coordinates)
+    def queue_combo_at(coordinates)
       return if seen_set.include?(coordinates)
       seen_set << coordinates
       combo = combo_at(coordinates)
@@ -63,11 +68,6 @@ module Mendel
     def score_combination(items)
       items.reduce(0) { |sum, item| sum += item }
     end
-
-    # def results
-    # rescue StopIteration
-    #   return results
-    # end
 
     # Increments which are valid for instance's lists
     def next_steps_from(coordinates)

@@ -109,27 +109,34 @@ describe Mendel::Combiner do
 
   describe "dumping and loading state" do
 
-    let(:combiner) { described_class.new([1,2,3], [1.1, 2.1, 3.1]) }
-
-    before :each do
-      enum = combiner.each
-      2.times { enum.next }
-    end
+    let(:list1)    { [1,2,3] }
+    let(:list2)    { [1.1, 2.1, 3.1] }
+    let(:combiner) { described_class.new(list1, list2) }
 
     context "when it has produced some combinations" do
 
-      # NOTE
-      # state exists in:
-      # - lists passed in
-      # - seen_set (coordinates tried)
-      # - items in priority_queue (previously built but not returned)
-
-      it "can dump its state" do
-        pending "figuring this out"
-        expect(combiner.dump).not_to be_nil #??
+      before :each do
+        combiner.take(3)
       end
 
-      it "can dump its state as JSON"
+      let(:dumped) {
+        {
+          input: [list1, list2], seen: [[0, 0], [1, 0], [0, 1], [2, 0], [1, 1], [0, 2]],
+          queued: [
+            [{:items=>[2, 2.1], :coordinates=>[1, 1], :score=>4.1}, 4.1], 
+            [{:items=>[3, 1.1], :coordinates=>[2, 0], :score=>4.1}, 4.1],
+            [{:items=>[1, 3.1], :coordinates=>[0, 2], :score=>4.1}, 4.1],
+          ]
+        }
+      }
+
+      it "can dump its state" do
+        expect(combiner.dump).to eq(dumped)
+      end
+
+      it "can dump its state as JSON" do
+        expect(combiner.dump_json).to eq(JSON.dump(dumped))
+      end
 
     end
 
