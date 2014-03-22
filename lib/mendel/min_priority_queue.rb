@@ -23,11 +23,7 @@ module Mendel
 
     def dump
       [].tap {|items|
-        loop do
-          item = pop
-          break if item.nil?
-          items << item
-        end
+        items << pop while length > 0
       }
     end
 
