@@ -176,4 +176,27 @@ describe Mendel::Combiner do
 
   end
 
+  describe "speed, as if this weren't machine-dependent" do
+
+    context "when given large lists" do
+      let!(:list1)   { 10_000.times.map { rand(1_000_000)        }.sort }
+      let!(:list2)   { 10_000.times.map { rand(1_000_000) / 10.0 }.sort }
+      let!(:combiner) { described_class.new(list1, list2) }
+
+      {100 => 5, 200 => 20, 1_000 => 50, 10_000 => 400}.each do |combo_count, milliseconds|
+
+        it "produces the first #{combo_count} combinations in less than #{milliseconds}ms" do
+          start = Time.now
+          combiner.take(combo_count)
+          elapsed = Time.now - start
+          # puts "elapsed time for #{combo_count} combinations is #{elapsed / 0.001}ms!"
+          expect(elapsed).to be < (0.001 * milliseconds)
+        end
+
+      end
+
+    end
+
+  end
+
 end
