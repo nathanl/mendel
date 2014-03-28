@@ -4,10 +4,10 @@ require "fixtures/example_input"
 
 describe Mendel::Combiner do
 
-  describe "producing correct output" do
+  let(:combiner_class) { described_class }
+  let(:combiner)       { combiner_class.new(list1, list2) }
 
-    let(:combiner_class) { described_class }
-    let(:combiner)       { combiner_class.new(list1, list2) }
+  describe "producing correct output" do
 
     let(:list1)          { EXAMPLE_INPUT[:incrementing_integers] }
     let(:all_results)    { combiner.to_a }
@@ -62,7 +62,22 @@ describe Mendel::Combiner do
 
     end
 
-    context "with lists of other items" do
+    context "when there are more than 2 lists" do
+
+      let(:list1) { [1.0, 2.0, 3.0] }
+      let(:list2) { [1.1 ,2.1, 3.1] }
+      let(:list3) { [1.2, 2.2, 3.2] }
+      let(:list4) { [1.3, 2.3, 3.3] }
+
+      let(:combiner) { described_class.new(list1, list2, list3, list4) }
+
+      it "can produce valid combinations" do
+        expect(combiner.first).to eq([1.0, 1.1, 1.2, 1.3, 4.6])
+      end
+
+    end
+
+    context "when given lists of non-numeric items" do
 
       let(:list1) { [{name: 'Jimmy', age: 10}, {name: 'Susan', age: 12}] }
       let(:list2) { [{name: 'Roger', age: 8},  {name: 'Carla',  age: 14}] }
@@ -76,26 +91,32 @@ describe Mendel::Combiner do
         combos.sort_by {|c| c.last}
       }
 
-      let(:combiner_class) {
-        Class.new(Mendel::Combiner) do
-          def score_combination(items)
-            items.reduce(0) { |sum, item| 
-              sum += item[:age].to_i 
-            }
-          end
-        end
-      }
+      context "when the combiner class has a way of scoring the items" do
 
-      it "has a complete result set that is ordered correctly" do
-        expect(all_results).to be_sorted_like(sorted_combos)
+        let(:combiner_class) {
+          Class.new(Mendel::Combiner) do
+            def score_combination(items)
+              items.reduce(0) { |sum, item|
+                sum += item[:age].to_i
+              }
+            end
+          end
+        }
+
+        it "has a complete result set that is ordered correctly" do
+          expect(all_results).to be_sorted_like(sorted_combos)
+        end
+
       end
+
     end
 
   end
 
   describe "enumeration" do
 
-    let(:combiner) { described_class.new([1,2], [1.1, 2.1]) }
+    let(:list1) { [1, 2]     }
+    let(:list2) { [1.1, 2.1] }
 
     it "is Enumerable" do
       expect(combiner).to be_a(Enumerable)
@@ -111,7 +132,6 @@ describe Mendel::Combiner do
 
     let(:list1)    { [1,2,3] }
     let(:list2)    { [1.1, 2.1, 3.1] }
-    let(:combiner) { described_class.new(list1, list2) }
 
     context "when it has produced some combinations" do
 
@@ -176,25 +196,15 @@ describe Mendel::Combiner do
 
   end
 
-  describe "speed, as if this weren't machine-dependent" do
+  describe "other methods" do
 
-    context "when given large lists" do
-      let!(:list1)   { 10_000.times.map { rand(1_000_000)        }.sort }
-      let!(:list2)   { 10_000.times.map { rand(1_000_000) / 10.0 }.sort }
-      let!(:combiner) { described_class.new(list1, list2) }
+    let(:list1) { [1.0, 2.0, 3.0] }
+    let(:list2) { [1.1 ,2.1, 3.1] }
 
-      {100 => 5, 200 => 20, 1_000 => 50, 10_000 => 400}.each do |combo_count, milliseconds|
-
-        it "produces the first #{combo_count} combinations in less than #{milliseconds}ms" do
-          start = Time.now
-          combiner.take(combo_count)
-          elapsed = Time.now - start
-          # puts "elapsed time for #{combo_count} combinations is #{elapsed / 0.001}ms!"
-          expect(elapsed).to be < (0.001 * milliseconds)
-        end
-
-      end
-
+    it "can return its queue length" do
+      expect(combiner.queue_length).to eq(1) # item at 0,0
+      combiner.take(1)
+      expect(combiner.queue_length).to eq(2) # queued its children
     end
 
   end

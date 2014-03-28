@@ -32,6 +32,10 @@ module Mendel
       JSON.dump(dump)
     end
 
+    def queue_length
+      priority_queue.length
+    end
+
     def self.load(data)
       instance = new(*data.fetch('input'))
       instance.instance_eval {
