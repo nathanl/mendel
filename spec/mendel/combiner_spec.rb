@@ -6,6 +6,8 @@ describe Mendel::Combiner do
 
   let(:combiner_class) { described_class }
   let(:combiner)       { combiner_class.new(list1, list2) }
+  let(:list1)          { [1.0, 2.0, 3.0] }
+  let(:list2)          { [1.1, 2.1, 3.1] }
 
   describe "producing correct output" do
 
@@ -64,8 +66,6 @@ describe Mendel::Combiner do
 
     context "when there are more than 2 lists" do
 
-      let(:list1) { [1.0, 2.0, 3.0] }
-      let(:list2) { [1.1 ,2.1, 3.1] }
       let(:list3) { [1.2, 2.2, 3.2] }
       let(:list4) { [1.3, 2.3, 3.3] }
 
@@ -115,9 +115,6 @@ describe Mendel::Combiner do
 
   describe "enumeration" do
 
-    let(:list1) { [1, 2]     }
-    let(:list2) { [1.1, 2.1] }
-
     it "is Enumerable" do
       expect(combiner).to be_a(Enumerable)
     end
@@ -130,9 +127,6 @@ describe Mendel::Combiner do
 
   describe "dumping and loading state" do
 
-    let(:list1)    { [1,2,3] }
-    let(:list2)    { [1.1, 2.1, 3.1] }
-
     context "when it has produced some combinations" do
 
       before :each do
@@ -143,9 +137,9 @@ describe Mendel::Combiner do
         {
           'input' => [list1, list2], 'seen' => [[0, 0], [1, 0], [0, 1], [2, 0], [1, 1], [0, 2]],
           'queued' => [
-            [{'items' =>[2, 2.1], 'coordinates' =>[1, 1], 'score' => 4.1}, 4.1], 
-            [{'items' =>[3, 1.1], 'coordinates' =>[2, 0], 'score' => 4.1}, 4.1],
-            [{'items' =>[1, 3.1], 'coordinates' =>[0, 2], 'score' => 4.1}, 4.1],
+            [{'items' =>[2.0, 2.1], 'coordinates' =>[1, 1], 'score' => 4.1}, 4.1], 
+            [{'items' =>[3.0, 1.1], 'coordinates' =>[2, 0], 'score' => 4.1}, 4.1],
+            [{'items' =>[1.0, 3.1], 'coordinates' =>[0, 2], 'score' => 4.1}, 4.1],
           ]
         }
       }
@@ -170,7 +164,7 @@ describe Mendel::Combiner do
 
           it "can begin producing combinations again from that point" do
             combiner = Mendel::Combiner.load(dumped_data)
-            expect(combiner.take(3)).to be_sorted_like([[2, 2.1, 4.1], [3, 1.1, 4.1], [1, 3.1, 4.1]])
+            expect(combiner.take(3)).to be_sorted_like([[2.0, 2.1, 4.1], [3.0, 1.1, 4.1], [1.0, 3.1, 4.1]])
           end
 
         end
@@ -185,7 +179,7 @@ describe Mendel::Combiner do
 
           it "can begin producing combinations again from that point" do
             combiner = Mendel::Combiner.load_json(dumped_json)
-            expect(combiner.take(3)).to be_sorted_like([[2, 2.1, 4.1], [3, 1.1, 4.1], [1, 3.1, 4.1]])
+            expect(combiner.take(3)).to be_sorted_like([[2.0, 2.1, 4.1], [3.0, 1.1, 4.1], [1.0, 3.1, 4.1]])
           end
 
         end
@@ -197,9 +191,6 @@ describe Mendel::Combiner do
   end
 
   describe "other methods" do
-
-    let(:list1) { [1.0, 2.0, 3.0] }
-    let(:list2) { [1.1 ,2.1, 3.1] }
 
     it "can return its queue length" do
       expect(combiner.queue_length).to eq(1) # item at 0,0
