@@ -26,12 +26,22 @@ describe Mendel::Visualizers::Base do
     let(:list2)      { (1..10).map {|i| i + 0.1} }
     let(:visualizer) { klass.new(list1, list2)   }
 
-    it "can mark a square as computed using the value" do
-      visualizer.mark_value([1, 0], 5)
-      expect(visualizer.value_at(1,0)).to eq(5)
+    describe "maintaining a list of changes" do
+
+      it "can be told that a coordinate has been computed"
+
+      it "can be told that a coordinate's combination has been returned"
+
     end
 
-    it "can mark a square as returned using an X"
+    describe "producing frames of output" do
+
+      it "produces frames of output using the recorded changes"
+
+      it "allows enumeration of the frames"
+
+    end
+
   end
 
 end
