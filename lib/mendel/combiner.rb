@@ -25,7 +25,7 @@ module Mendel
     end
 
     def dump
-      {'input' => lists, 'seen' => seen_set.to_a, 'queued' => priority_queue.dump }
+      {INPUT => lists, SEEN => seen_set.to_a, QUEUED => priority_queue.dump }
     end
 
     def dump_json
@@ -37,10 +37,10 @@ module Mendel
     end
 
     def self.load(data)
-      instance = new(*data.fetch('input'))
+      instance = new(*data.fetch(INPUT))
       instance.instance_eval {
-        self.seen_set       = Set.new(data.fetch('seen'))
-        self.priority_queue = MinPriorityQueue.new.tap {|q| q.load(data.fetch('queued'))}
+        self.seen_set       = Set.new(data.fetch(SEEN))
+        self.priority_queue = MinPriorityQueue.new.tap {|q| q.load(data.fetch(QUEUED))}
       }
       instance
     end
@@ -63,23 +63,22 @@ module Mendel
       combo = priority_queue.pop
       return :none if combo.nil?
       combo = combo[0]
-      children_coordinates = next_steps_from(combo.fetch('coordinates'))
+      children_coordinates = next_steps_from(combo.fetch(COORDINATES))
       children_coordinates.each {|co| queue_combo_at(co) }
-      [combo.fetch('items'), combo.fetch('score')].flatten
+      [combo.fetch(ITEMS), combo.fetch(SCORE)].flatten
     end
 
     def queue_combo_at(coordinates)
       return if seen_set.include?(coordinates)
       seen_set << coordinates
       combo = combo_at(coordinates)
-      priority_queue.push(combo, combo.fetch('score'))
+      priority_queue.push(combo, combo.fetch(SCORE))
     end
 
     def combo_at(coordinates)
       return unless valid_for_lists?(coordinates, lists)
       items = lists.each_with_index.map {|list, i| list[coordinates[i]] }
-      # TODO - store these strings in constants so we don't allocate tons of identical ones
-      {'items' => items, 'coordinates' => coordinates, 'score' => score_combination(items)}
+      {ITEMS => items, COORDINATES => coordinates, SCORE => score_combination(items)}
     end
 
     # Override on instance if you like
@@ -126,5 +125,12 @@ module Mendel
       index <= (array.length - 1) && index >= (0 - array.length)
     end
 
+    # To keep from allocating so many strings
+    COORDINATES = 'coordinates'.freeze
+    INPUT       = 'input'.freeze
+    ITEMS       = 'items'.freeze
+    QUEUED      = 'queued'.freeze
+    SCORE       = 'score'.freeze
+    SEEN        = 'seen'.freeze
   end
 end
