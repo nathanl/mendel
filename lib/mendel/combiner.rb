@@ -60,12 +60,13 @@ module Mendel
     end
 
     def next_combination
-      combo = priority_queue.pop
-      return :none if combo.nil?
-      combo = combo[0]
+      item = priority_queue.pop
+      return :none if item.nil?
+      combo, score = item
       children_coordinates = next_steps_from(combo.fetch(COORDINATES))
-      children_coordinates.each {|co| queue_combo_at(co) }
-      [combo.fetch(ITEMS), combo.fetch(SCORE)].flatten
+      children_coordinates.each {|cc| queue_combo_at(cc) }
+      notify(:returned, combo)
+      [combo.fetch(ITEMS), score].flatten
     end
 
     def queue_combo_at(coordinates)
@@ -78,7 +79,9 @@ module Mendel
     def combo_at(coordinates)
       return unless valid_for_lists?(coordinates, lists)
       items = lists.each_with_index.map {|list, i| list[coordinates[i]] }
-      {ITEMS => items, COORDINATES => coordinates, SCORE => score_combination(items)}
+      {ITEMS => items, COORDINATES => coordinates, SCORE => score_combination(items)}.tap {|combo|
+        notify(:scored, combo)
+      }
     end
 
     # Override on instance if you like
@@ -123,6 +126,10 @@ module Mendel
     #   valid_index_in?(['hi', 'ho'], -3) #=> true
     def valid_index_in?(array, index)
       index <= (array.length - 1) && index >= (0 - array.length)
+    end
+
+    def notify(*args)
+      # No-op
     end
 
     # To keep from allocating so many strings
