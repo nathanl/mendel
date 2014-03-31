@@ -4,10 +4,14 @@ require "set"
 
 module Mendel
 
-  class Combiner
+  module Combiner
     include Enumerable
 
     attr_accessor :lists, :priority_queue
+
+    def self.included(target)
+      target.extend(ClassMethods)
+    end
 
     def initialize(*lists)
       self.lists          = lists
@@ -36,17 +40,9 @@ module Mendel
       priority_queue.length
     end
 
-    def self.load(data)
-      instance = new(*data.fetch(INPUT))
-      instance.instance_eval {
-        self.seen_set       = Set.new(data.fetch(SEEN))
-        self.priority_queue = MinPriorityQueue.new.tap {|q| q.load(data.fetch(QUEUED))}
-      }
-      instance
-    end
-
-    def self.load_json(json)
-      self.load(JSON.parse(json))
+    def score_combination(items)
+      raise NotImplementedError,
+        "Including class must define. Take N items (one from each list) and produce a combined score"
     end
 
     private
@@ -82,11 +78,6 @@ module Mendel
       {ITEMS => items, COORDINATES => coordinates, SCORE => score_combination(items)}.tap {|combo|
         notify(:scored, combo)
       }
-    end
-
-    # Override on instance if you like
-    def score_combination(items)
-      items.reduce(0) { |sum, item| sum += item }
     end
 
     # Increments which are valid for instance's lists
@@ -139,5 +130,20 @@ module Mendel
     QUEUED      = 'queued'.freeze
     SCORE       = 'score'.freeze
     SEEN        = 'seen'.freeze
+
+    module ClassMethods
+      def load(data)
+        instance = new(*data.fetch(INPUT))
+        instance.instance_eval {
+          self.seen_set       = Set.new(data.fetch(SEEN))
+          self.priority_queue = MinPriorityQueue.new.tap {|q| q.load(data.fetch(QUEUED))}
+        }
+        instance
+      end
+
+      def load_json(json)
+        self.load(JSON.parse(json))
+      end
+    end
   end
 end

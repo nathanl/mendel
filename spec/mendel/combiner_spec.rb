@@ -4,10 +4,32 @@ require "fixtures/example_input"
 
 describe Mendel::Combiner do
 
-  let(:combiner_class) { described_class }
+  let(:combiner_class) {
+    Class.new do
+      include Mendel::Combiner
+      def score_combination(items)
+        items.reduce(0) { |sum, item| sum += item }
+      end
+    end
+
+  }
   let(:combiner)       { combiner_class.new(list1, list2) }
   let(:list1)          { [1.0, 2.0, 3.0] }
   let(:list2)          { [1.1, 2.1, 3.1] }
+
+  describe "requiring the including class to define `score_combination`" do
+
+    let(:combiner_class) {
+      Class.new do
+        include Mendel::Combiner
+      end
+    }
+
+    it "raises NotImplementedError otherwise" do
+      expect{combiner.take(1)}.to raise_error(NotImplementedError)
+    end
+
+  end
 
   describe "producing correct output" do
 
@@ -69,7 +91,7 @@ describe Mendel::Combiner do
       let(:list3) { [1.2, 2.2, 3.2] }
       let(:list4) { [1.3, 2.3, 3.3] }
 
-      let(:combiner) { described_class.new(list1, list2, list3, list4) }
+      let(:combiner) { combiner_class.new(list1, list2, list3, list4) }
 
       it "can produce valid combinations" do
         expect(combiner.first).to eq([1.0, 1.1, 1.2, 1.3, 4.6])
@@ -94,7 +116,8 @@ describe Mendel::Combiner do
       context "when the combiner class has a way of scoring the items" do
 
         let(:combiner_class) {
-          Class.new(Mendel::Combiner) do
+          Class.new do
+            include Mendel::Combiner
             def score_combination(items)
               items.reduce(0) { |sum, item|
                 sum += item[:age].to_i
@@ -159,11 +182,11 @@ describe Mendel::Combiner do
           let!(:dumped_data) { combiner.dump }
 
           it "can load state" do
-            expect(Mendel::Combiner.load(dumped_data)).to be_a(Mendel::Combiner)
+            expect(combiner_class.load(dumped_data)).to be_a(combiner_class)
           end
 
           it "can begin producing combinations again from that point" do
-            combiner = Mendel::Combiner.load(dumped_data)
+            combiner = combiner_class.load(dumped_data)
             expect(combiner.take(3)).to be_sorted_like([[2.0, 2.1, 4.1], [3.0, 1.1, 4.1], [1.0, 3.1, 4.1]])
           end
 
@@ -174,11 +197,11 @@ describe Mendel::Combiner do
           let!(:dumped_json) { combiner.dump_json }
 
           it "can load state" do
-            expect(Mendel::Combiner.load_json(dumped_json)).to be_a(Mendel::Combiner)
+            expect(combiner_class.load_json(dumped_json)).to be_a(combiner_class)
           end
 
           it "can begin producing combinations again from that point" do
-            combiner = Mendel::Combiner.load_json(dumped_json)
+            combiner = combiner_class.load_json(dumped_json)
             expect(combiner.take(3)).to be_sorted_like([[2.0, 2.1, 4.1], [3.0, 1.1, 4.1], [1.0, 3.1, 4.1]])
           end
 

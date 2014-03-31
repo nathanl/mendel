@@ -15,7 +15,13 @@ require 'csv'
 
 list1    = list1_length.times.map  { rand(1_000_000)        }.sort
 list2    = list2_length.times.map  { rand(1_000_000) / 10.0 }.sort
-combiner = Mendel::Combiner.new(list1, list2)
+combiner_class = Class.new do
+  include Mendel::Combiner
+  def score_combination(items)
+    items.reduce(0) { |sum, item| sum += item }
+  end
+end
+combiner = combiner_class.new(list1, list2)
  
 column_names = %i[cstime cutime real stime total utime]
 
