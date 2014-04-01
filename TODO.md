@@ -1,4 +1,5 @@
 # TODO
 
+- Make Combiner a class again; require Scorer object in initialize method that responds to `.call`
 - Have a rake task that runs through some combination scenarios (2 lists only) and draws the progress through the grid. Eg, start with items drawn on the axes but nothing in the middle, put a numeric value on a coordinate when its score is calculated. (Maybe output an HTML/jQuery animation?)
 - Use colorize gem for ASCII output
