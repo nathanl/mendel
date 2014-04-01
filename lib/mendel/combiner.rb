@@ -1,11 +1,13 @@
 require "mendel/version"
 require "mendel/min_priority_queue"
+require "observer"
 require "set"
 
 module Mendel
 
   module Combiner
     include Enumerable
+    include Observable
 
     attr_accessor :lists, :priority_queue
 
@@ -120,7 +122,8 @@ module Mendel
     end
 
     def notify(*args)
-      # No-op
+      changed
+      notify_observers(*args)
     end
 
     # To keep from allocating so many strings
