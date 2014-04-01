@@ -16,15 +16,17 @@ Dir.glob("#{data_dir}/*.csv") do |data_file|
     queue_lengths << row.fetch('queue_length').to_i
   end 
 
+  base_image_name = data_file.sub('.csv', '')
+
   g = Gruff::Line.new
   g.data(:utimes, utimes)
   g.title = "Time per .take()"
-  g.write("#{data_file}_utimes.png")
+  g.write("#{base_image_name}_utimes.png")
 
   g = Gruff::Line.new
   g.data(:queue_length, queue_lengths)
   g.title = "Queue Length per .take()"
-  g.write("#{data_file}_queue_lengths.png")
+  g.write("#{base_image_name}_queue_lengths.png")
 
 
 
