@@ -1,44 +1,58 @@
 require_relative "../../spec_helper"
+require "mendel"
 require "mendel/visualizers/base"
 
 describe Mendel::Visualizers::Base do
 
   let(:klass) { described_class }
+  let(:combiner_class) {
+    Class.new do
+      include Mendel::Combiner
+      def score_combination(items)
+        items.reduce(0) { |sum, item| sum += item }
+      end
+    end
+  }
+
+  let(:combiner) { combiner_class.new(list1, list2) }
+  let(:list1)      { (1..10).to_a              }
+  let(:list2)      { (1..10).map {|i| i + 0.1} }
 
   describe "initialization" do
 
-    it "requires exactly 2 lists" do
-      expect{klass.new([1,2], [3,4])}.not_to raise_error
-      expect{klass.new([1,2], [3,4], [5,6])}.to raise_error(klass.const_get('InvalidListCount'))
-      expect{klass.new([1,2])}.to raise_error(klass.const_get('InvalidListCount'))
+    it "adds itself to the observers of the combiner" do
+      expect(combiner).to receive(:add_observer)
+      klass.new(combiner)
+    end
+
+    it "requires the combiner to have exactly 2 lists" do
+      expect{klass.new(combiner)}.not_to raise_error
+      expect{klass.new(combiner_class.new([1], [2], [3]))}.to raise_error(klass.const_get('InvalidListCount'))
+      expect{klass.new(combiner_class.new([1]))}.to raise_error(klass.const_get('InvalidListCount'))
     end
 
     it "limits list length" do
-      over = klass.max_list_length + 1
-      expect{klass.new((1..over).to_a, (1..10).to_a)}.to raise_error(klass.const_get('ListsTooLarge'))
+      over = klass.max_list_length + 10
+      expect{klass.new(combiner_class.new([1], (1..over).to_a))}.to raise_error(klass.const_get('ListsTooLarge'))
     end
 
   end
 
   describe "after initialization" do
 
-    let(:list1)      { (1..10).to_a              }
-    let(:list2)      { (1..10).map {|i| i + 0.1} }
-    let(:visualizer) { klass.new(list1, list2)   }
+    let(:visualizer) { klass.new(combiner) }
 
-    describe "maintaining a list of changes" do
+    describe "keeping a grid of state" do
 
-      it "can be told that a coordinate has been computed"
+      it "starts everything as unscored" do
+        expect(visualizer.grid).to eq(
+          Array.new(list2.size, Array.new(list1.size, :unscored))
+        )
+      end
 
-      it "can be told that a coordinate's combination has been returned"
+      it "can mark something as scored"
 
-    end
-
-    describe "producing frames of output" do
-
-      it "produces frames of output using the recorded changes"
-
-      it "allows enumeration of the frames"
+      it "can mark something as returned"
 
     end
 
