@@ -122,8 +122,7 @@ module Mendel
     end
 
     def notify(*args)
-      changed
-      notify_observers(*args)
+      changed && notify_observers(*args)
     end
 
     # To keep from allocating so many strings

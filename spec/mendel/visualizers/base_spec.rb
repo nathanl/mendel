@@ -40,7 +40,7 @@ describe Mendel::Visualizers::Base do
 
   describe "after initialization" do
 
-    let(:visualizer) { klass.new(combiner) }
+    let!(:visualizer) { klass.new(combiner) }
 
     describe "keeping a grid of state" do
 
@@ -50,9 +50,22 @@ describe Mendel::Visualizers::Base do
         )
       end
 
-      it "can mark something as scored"
+      describe "handling notifications when a combination is returned" do
 
-      it "can mark something as returned"
+        before :each do
+          combiner.take(1)
+        end
+
+        it "remembers which item was returned" do
+          expect(visualizer.grid[0][0]).to eq(:returned)
+        end
+
+        it "remembers which items were scored" do
+          expect(visualizer.grid[1][0]).to eq(:scored)
+          expect(visualizer.grid[0][1]).to eq(:scored)
+        end
+
+      end
 
     end
 
