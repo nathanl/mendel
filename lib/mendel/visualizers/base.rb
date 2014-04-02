@@ -1,7 +1,7 @@
 module Mendel
   module Visualizers
     class Base
-      attr_accessor :list1, :list2
+      attr_accessor :combiner, :list1, :list2
       attr_reader :grid
 
       def self.max_list_length
@@ -9,16 +9,18 @@ module Mendel
       end
 
       def initialize(combiner)
+        self.combiner = combiner
         combiner.add_observer(self)
         lists = combiner.lists
         check_list_validity(lists)
         self.list1, self.list2 = lists
-        self.grid = Array.new(list1.size) { Array.new(list2.size, :unscored) }
+        self.grid = Array.new(list1.size) { Array.new(list2.size, [:unscored]) }
       end
 
       def update(status, combo)
-        y, x = combo.fetch('coordinates')
-        grid[y][x] = status
+        y, x  = combo.fetch('coordinates')
+        score = combo.fetch('score')
+        grid[y][x] = [status, score]
       end
 
       private
@@ -32,6 +34,8 @@ module Mendel
 
       InvalidListCount = Class.new(StandardError)
       ListsTooLarge    = Class.new(StandardError)
+
+      UnknownPointType = Class.new(StandardError)
     end
   end
 end

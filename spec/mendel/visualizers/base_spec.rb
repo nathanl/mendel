@@ -46,7 +46,7 @@ describe Mendel::Visualizers::Base do
 
       it "starts everything as unscored" do
         expect(visualizer.grid).to eq(
-          Array.new(list2.size, Array.new(list1.size, :unscored))
+          Array.new(list2.size, Array.new(list1.size, [:unscored]))
         )
       end
 
@@ -57,12 +57,12 @@ describe Mendel::Visualizers::Base do
         end
 
         it "remembers which item was returned" do
-          expect(visualizer.grid[0][0]).to eq(:returned)
+          expect(visualizer.grid[0][0]).to match_array([:returned, a_kind_of(Numeric)])
         end
 
         it "remembers which items were scored" do
-          expect(visualizer.grid[1][0]).to eq(:scored)
-          expect(visualizer.grid[0][1]).to eq(:scored)
+          expect(visualizer.grid[1][0]).to match_array([:scored, a_kind_of(Numeric)])
+          expect(visualizer.grid[0][1]).to match_array([:scored, a_kind_of(Numeric)])
         end
 
       end

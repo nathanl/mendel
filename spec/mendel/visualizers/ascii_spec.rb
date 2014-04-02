@@ -18,7 +18,7 @@ describe Mendel::Visualizers::ASCII do
   let(:list1)      { (1..10).to_a }
   let(:list2)      { (1..10).map { |i| i + 0.1} }
   let(:klass)      { described_class }
-  let(:visualizer) { klass.new(combiner) }
+  let!(:visualizer) { klass.new(combiner) }
 
   describe "after initialization" do
 
@@ -48,40 +48,67 @@ describe Mendel::Visualizers::ASCII do
 
       end
 
-      it "shows an empty grid when initialized" do
-        expect(visualizer.output).to eq(
+      describe "grid points" do
+
+        it "represents :unscored as a blank 8 spaces wide" do
+          expect(visualizer.grid_point_for(:unscored)).to eq('        ')
+        end
+
+        it "represents :scored as a yellow number" do
+          expect(visualizer.grid_point_for(:scored, 5)).to eq('       5'.yellow)
+        end
+
+        it "represents :returned as a green number" do
+          expect(visualizer.grid_point_for(:returned, 873)).to eq('     873'.green)
+        end
+
+      end
+
+      describe "output" do
+
+        let(:empty_grid) {
           <<-WOO
-      10
+      10                                                                                                  
 
 
-       9
+       9                                                                                                  
 
 
-       8
+       8                                                                                                  
 
 
-       7
+       7                                                                                                  
 
 
-       6
+       6                                                                                                  
 
 
-       5
+       5                                                                                                  
 
 
-       4
+       4                                                                                                  
 
 
-       3
+       3                                                                                                  
 
 
-       2
+       2                                                                                                  
 
 
-       1
+       1                                                                                                  
              1.1       2.1       3.1       4.1       5.1       6.1       7.1       8.1       9.1      10.1
           WOO
-        )
+        }
+
+        it "shows an empty grid when initialized" do
+          expect(visualizer.output).to eq(empty_grid)
+        end
+
+        it "shows something else after enumerating" do
+          combiner.take(3)
+          expect(visualizer.output).not_to eq(empty_grid)
+        end
+
       end
 
     end
