@@ -50,6 +50,12 @@ pc = ProductCombiner.new(shirts, pants, hats)
 pc.take(50) # The 50 cheapest outfits
 ```
 
+If you need to apply other criteria besides the score, use lazy enumeration and chain other calls:
+
+```ruby
+  pc.each.lazy.reject { |outfit| hideous_color_combination?(outfit) }.take(50).to_a
+```
+
 ## Serialization and deserialization
 
 Mendel::Combiner provides the instance methods `#dump` and `#dump_json` and the class methods `.load` and `.load_json`. This allows you to pause enumeration, save the data, and resume enumerating some time later.
