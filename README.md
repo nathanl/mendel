@@ -23,8 +23,8 @@ list2 = (1.0..100.0).to_a
 class NumericCombiner
   include Mendel::Combiner
   # Scores a combination from the two lists by adding them
-  def score_combination(items)
-    items.reduce(0) { |sum, item| sum += item }
+  def score_combination(numbers)
+    numbers.reduce(0) { |sum, number| sum += number }
   end
 end
 
@@ -41,8 +41,8 @@ hats   = Hat.all
 
 class ProductCombiner
   include Mendel::Combiner
-  def score_combination(items)
-    items.reduce(0) { |sum, item| sum += item.price}
+  def score_combination(products)
+    products.reduce(0) { |sum, product| sum += product.price}
   end
 end
 
