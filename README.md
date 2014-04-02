@@ -67,4 +67,4 @@ In Bundler:
 
 ## Naming
 
-Mendel is named for Gregor Mendel, "the father of modern genetics", a scientist and monk who discovered patterns of inheritance while breeding pea plants. The Mendel gem helps you breed the best possible hybrids of your data.
+Mendel is named for [Gregor Mendel](https://en.wikipedia.org/wiki/Gregor_Mendel), "the father of modern genetics", a scientist and monk who discovered patterns of inheritance while breeding pea plants. The Mendel gem helps you breed the best possible hybrids of your data.
