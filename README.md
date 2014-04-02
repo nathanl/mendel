@@ -15,6 +15,8 @@ Create a combiner class that knows how to score combinations of your items. Then
 For example:
 
 ```ruby
+# Simple lists of numbers. Any combination of these
+# can be scored by adding them together
 list1 = (1..100).to_a
 list2 = (1.0..100.0).to_a
 
@@ -28,6 +30,24 @@ end
 
 nc = NumericCombiner.new(list1, list2)
 nc.take(50) # The 50 best combinations
+```
+
+A slightly more realistic example:
+
+```ruby
+shirts = Shirt.all
+pants  = Pant.all
+hats   = Hat.all
+
+class ProductCombiner
+  include Mendel::Combiner
+  def score_combination(items)
+    items.reduce(0) { |sum, item| sum += item.price}
+  end
+end
+
+pc = ProductCombiner.new(shirts, pants, hats)
+pc.take(50) # The 50 cheapest outfits
 ```
 
 ## Serialization and deserialization
