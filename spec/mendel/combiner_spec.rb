@@ -94,7 +94,7 @@ describe Mendel::Combiner do
       let(:combiner) { combiner_class.new(list1, list2, list3, list4) }
 
       it "can produce valid combinations" do
-        expect(combiner.first).to eq([1.0, 1.1, 1.2, 1.3, 4.6])
+        expect(combiner.first).to eq([[1.0, 1.1, 1.2, 1.3], 4.6])
       end
 
     end
@@ -107,7 +107,7 @@ describe Mendel::Combiner do
         combos = []
         list1.each do |l1|
           list2.each do |l2|
-            combos << [l1, l2, l1[:age] + l2[:age]]
+            combos << [[l1, l2], l1[:age] + l2[:age]]
           end
         end
         combos.sort_by {|c| c.last}
@@ -187,7 +187,7 @@ describe Mendel::Combiner do
 
           it "can begin producing combinations again from that point" do
             combiner = combiner_class.load(dumped_data)
-            expect(combiner.take(3)).to be_sorted_like([[2.0, 2.1, 4.1], [3.0, 1.1, 4.1], [1.0, 3.1, 4.1]])
+            expect(combiner.take(3)).to be_sorted_like([[[2.0, 2.1], 4.1], [[3.0, 1.1], 4.1], [[1.0, 3.1], 4.1]])
           end
 
         end
@@ -202,7 +202,7 @@ describe Mendel::Combiner do
 
           it "can begin producing combinations again from that point" do
             combiner = combiner_class.load_json(dumped_json)
-            expect(combiner.take(3)).to be_sorted_like([[2.0, 2.1, 4.1], [3.0, 1.1, 4.1], [1.0, 3.1, 4.1]])
+            expect(combiner.take(3)).to be_sorted_like([[[2.0, 2.1], 4.1], [[3.0, 1.1], 4.1], [[1.0, 3.1], 4.1]])
           end
 
         end

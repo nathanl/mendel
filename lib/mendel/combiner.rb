@@ -64,7 +64,7 @@ module Mendel
       children_coordinates = next_steps_from(combo.fetch(COORDINATES))
       children_coordinates.each {|cc| queue_combo_at(cc) }
       notify(:returned, combo)
-      [combo.fetch(ITEMS), score].flatten
+      [combo.fetch(ITEMS), score]
     end
 
     def queue_combo_at(coordinates)
