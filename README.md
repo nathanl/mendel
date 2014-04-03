@@ -32,22 +32,40 @@ nc = NumericCombiner.new(list1, list2)
 nc.take(50) # The 50 best combinations
 ```
 
-A slightly more realistic example:
+A combination of items is, by default, an array with one item from each list. However, if you like, you may specify how to build combinations of your items.
 
 ```ruby
-shirts = Shirt.all
-pants  = Pant.all
-hats   = Hat.all
+defense_players = [{name: 'Jimmy', age: 10}, {name: 'Susan', age: 12}]
+offense_players = [{name: 'Roger', age: 8},  {name: 'Carla',  age: 14}]
 
-class ProductCombiner
-  include Mendel::Combiner
-  def score_combination(products)
-    products.reduce(0) { |sum, product| sum += product.price}
+class FoosballTeam
+  attr_accessor :players
+
+  def initialize(*players)
+    self.players = players
+  end
+
+  def average_age
+    players.reduce(0){ |total, player|
+      total += player.fetch(:age)
+    } / 2.0
   end
 end
 
-pc = ProductCombiner.new(shirts, pants, hats)
-pc.take(50) # The 50 cheapest outfits
+class TeamBuilder
+  include Mendel::Combiner
+
+  def build_combination(players)
+    FoosballTeam.new(*players)
+  end
+
+  def score_combination(team)
+    team.average_age
+  end
+end
+
+pc = TeamBuilder.new(defense_players, offense_players)
+pc.take(2) # The youngest teams
 ```
 
 If you need to apply other criteria besides the score, use lazy enumeration and chain other calls:

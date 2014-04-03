@@ -1,6 +1,7 @@
 require_relative "../spec_helper"
 require "mendel/combiner"
 require "fixtures/example_input"
+require "support/foosball_team"
 
 describe Mendel::Combiner do
 
@@ -105,23 +106,29 @@ describe Mendel::Combiner do
       let(:list2) { [{name: 'Roger', age: 8},  {name: 'Carla',  age: 14}] }
       let(:sorted_combos) {
         combos = []
-        list1.each do |l1|
-          list2.each do |l2|
-            combos << [[l1, l2], l1[:age] + l2[:age]]
+        list1.each do |player_1|
+          list2.each do |player_2|
+            combos << [
+              FoosballTeam.new(player_1, player_2),
+              (player_1[:age] + player_2[:age]) / 2.0
+            ]
           end
         end
         combos.sort_by {|c| c.last}
       }
 
-      context "when the combiner class has a way of scoring the items" do
+      context "when the combiner class has custom combination and scoring methods" do
 
         let(:combiner_class) {
           Class.new do
             include Mendel::Combiner
-            def score_combination(items)
-              items.reduce(0) { |sum, item|
-                sum += item[:age].to_i
-              }
+
+            def build_combination(items)
+              FoosballTeam.new(*items)
+            end
+
+            def score_combination(combination)
+              combination.average_age
             end
           end
         }

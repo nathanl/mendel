@@ -77,9 +77,14 @@ module Mendel
     def combo_at(coordinates)
       return unless valid_for_lists?(coordinates, lists)
       items = lists.each_with_index.map {|list, i| list[coordinates[i]] }
-      {ITEMS => items, COORDINATES => coordinates, SCORE => score_combination(items)}.tap {|combo|
+      combination = build_combination(items)
+      {ITEMS => combination, COORDINATES => coordinates, SCORE => score_combination(combination)}.tap {|combo|
         notify(:scored, combo)
       }
+    end
+
+    def build_combination(items)
+      items
     end
 
     # Increments which are valid for instance's lists
