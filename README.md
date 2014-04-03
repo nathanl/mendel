@@ -71,7 +71,7 @@ pc.take(2) # The youngest teams
 If you need to apply other criteria besides the score, use lazy enumeration and chain other calls:
 
 ```ruby
-  pc.each.lazy.reject { |outfit| hideous_color_combination?(outfit) }.take(50).to_a
+  pc.each.lazy.reject { |team| siblings?(team) }.take(50).to_a
 ```
 
 ## Serialization and deserialization
