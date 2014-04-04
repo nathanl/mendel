@@ -58,13 +58,18 @@ module Mendel
     end
 
     def next_combination
-      tuple = priority_queue.pop
-      return :none if tuple.nil?
-      coordinates, score = tuple
+      pair = pop_queue
+      return :none if pair.nil?
+      coordinates, score = pair
       queue_children_of(coordinates)
-      notify(:returned, {COORDINATES => coordinates, SCORE => score})
       combo = combo_at(coordinates)
       [combo, score]
+    end
+
+    def pop_queue
+      priority_queue.pop.tap { |pair|
+        notify(:returned, {COORDINATES => pair[0], SCORE => pair[1]}) unless pair.nil?
+      }
     end
 
     def queue_children_of(coordinates)
