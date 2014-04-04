@@ -63,7 +63,7 @@ module Mendel
       coordinates, score = tuple
       children_coordinates = next_steps_from(coordinates)
       children_coordinates.each {|cc| queue_combo_at(cc) }
-      notify(:returned, coordinates)
+      notify(:returned, {COORDINATES => coordinates, SCORE => score})
       combo = combo_at(coordinates)
       [combo, score]
     end
