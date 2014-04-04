@@ -18,7 +18,6 @@ if result_count >= list_length**list_count
 end
 
 lists = list_count.times.map {
-  # More than this eats a ton of memory
   list_length.times.map { rand(1.0...1_000.0) }.sort
 }
 
