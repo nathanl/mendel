@@ -1,13 +1,13 @@
 require_relative "../../spec_helper"
 require "mendel"
+require "mendel/observable_combiner"
 require "mendel/visualizers/base"
 
 describe Mendel::Visualizers::Base do
 
   let(:klass) { described_class }
   let(:combiner_class) {
-    Class.new do
-      include Mendel::Combiner
+    Class.new(Mendel::ObservableCombiner) do
       def score_combination(items)
         items.reduce(0) { |sum, item| sum += item }
       end

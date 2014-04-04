@@ -7,7 +7,6 @@ module Mendel
 
   module Combiner
     include Enumerable
-    include Observable
 
     attr_accessor :lists, :priority_queue
 
@@ -67,9 +66,7 @@ module Mendel
     end
 
     def pop_queue
-      priority_queue.pop.tap { |pair|
-        notify(:returned, {COORDINATES => pair[0], SCORE => pair[1]}) unless pair.nil?
-      }
+      priority_queue.pop
     end
 
     def queue_children_of(coordinates)
@@ -88,9 +85,7 @@ module Mendel
       # TODO - shouldn't this raise an exception?
       return unless valid_for_lists?(coordinates, lists)
       score = score_combination(combo_at(coordinates))
-      {COORDINATES => coordinates, SCORE => score}.tap {|combo|
-        notify(:scored, combo)
-      }
+      {COORDINATES => coordinates, SCORE => score}
     end
 
     def combo_at(coordinates)
@@ -139,10 +134,6 @@ module Mendel
     #   valid_index_in?(['hi', 'ho'], -3) #=> true
     def valid_index_in?(array, index)
       index <= (array.length - 1) && index >= (0 - array.length)
-    end
-
-    def notify(*args)
-      changed && notify_observers(*args)
     end
 
     # To keep from allocating so many strings

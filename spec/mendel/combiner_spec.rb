@@ -220,30 +220,6 @@ describe Mendel::Combiner do
 
   end
 
-  describe "notification of events" do
-
-    describe "when a combination is returned" do
-
-      it "notifies that the combo's children have been scored and that the combo has been returned" do
-        # 2 times because with two lists there are two child coordinates
-        expect(combiner).to receive(:notify).exactly(2).times.with(
-          :scored, a_hash_including(
-            'coordinates' => an_instance_of(Array),
-            'score'       => a_kind_of(Numeric)
-          )
-        )
-        expect(combiner).to receive(:notify).exactly(1).times.with(
-          :returned, a_hash_including(
-            'coordinates' => an_instance_of(Array),
-            'score'       => a_kind_of(Numeric)
-          )
-        )
-        combiner.take(1)
-      end
-
-    end
-
-  end
 
   describe "other methods" do
 
