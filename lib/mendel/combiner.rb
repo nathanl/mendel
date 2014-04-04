@@ -59,9 +59,10 @@ module Mendel
     def next_combination
       pair = pop_queue
       return :none if pair.nil?
-      coordinates, score = pair
+      data, score = pair
+      coordinates = data.fetch(COORDINATES)
+      combo       = data.fetch(COMBO)
       queue_children_of(coordinates)
-      combo = combo_at(coordinates)
       [combo, score]
     end
 
@@ -78,13 +79,15 @@ module Mendel
       return if seen_set.include?(coordinates)
       seen_set << coordinates
       queue_item = queueable_item_for(coordinates)
-      priority_queue.push(queue_item.fetch(COORDINATES), queue_item.fetch(SCORE))
+      score = queue_item.delete(SCORE)
+      priority_queue.push(queue_item, score)
     end
 
     def queueable_item_for(coordinates)
       raise InvalidCoordinates, coordinates unless valid_for_lists?(coordinates, lists)
-      score = score_combination(combo_at(coordinates))
-      {COORDINATES => coordinates, SCORE => score}
+      combo = combo_at(coordinates)
+      score = score_combination(combo)
+      {COMBO => combo, COORDINATES => coordinates, SCORE => score}
     end
 
     def combo_at(coordinates)
@@ -136,6 +139,7 @@ module Mendel
     end
 
     # To keep from allocating so many strings
+    COMBO       = 'combo'.freeze
     COORDINATES = 'coordinates'.freeze
     INPUT       = 'input'.freeze
     QUEUED      = 'queued'.freeze
