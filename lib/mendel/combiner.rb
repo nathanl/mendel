@@ -80,11 +80,11 @@ module Mendel
     def queue_combo_at(coordinates)
       return if seen_set.include?(coordinates)
       seen_set << coordinates
-      queue_item = queue_item_for(coordinates)
+      queue_item = queueable_item_for(coordinates)
       priority_queue.push(queue_item.fetch(COORDINATES), queue_item.fetch(SCORE))
     end
 
-    def queue_item_for(coordinates)
+    def queueable_item_for(coordinates)
       # TODO - shouldn't this raise an exception?
       return unless valid_for_lists?(coordinates, lists)
       score = score_combination(combo_at(coordinates))
