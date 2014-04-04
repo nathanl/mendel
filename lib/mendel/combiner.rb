@@ -60,11 +60,11 @@ module Mendel
     def next_combination
       tuple = priority_queue.pop
       return :none if tuple.nil?
-      item, score = tuple
-      children_coordinates = next_steps_from(item.fetch(COORDINATES))
+      coordinates, score = tuple
+      children_coordinates = next_steps_from(coordinates)
       children_coordinates.each {|cc| queue_combo_at(cc) }
-      notify(:returned, item)
-      combo = combo_at(item.fetch(COORDINATES))
+      notify(:returned, coordinates)
+      combo = combo_at(coordinates)
       [combo, score]
     end
 
@@ -72,7 +72,7 @@ module Mendel
       return if seen_set.include?(coordinates)
       seen_set << coordinates
       queue_item = queue_item_for(coordinates)
-      priority_queue.push(queue_item, queue_item.fetch(SCORE))
+      priority_queue.push(queue_item.fetch(COORDINATES), queue_item.fetch(SCORE))
     end
 
     def queue_item_for(coordinates)

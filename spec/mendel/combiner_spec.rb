@@ -167,9 +167,9 @@ describe Mendel::Combiner do
         {
           'input' => [list1, list2], 'seen' => [[0, 0], [1, 0], [0, 1], [2, 0], [1, 1], [0, 2]],
           'queued' => [
-            [{'coordinates' =>[1, 1], 'score' => 4.1}, 4.1],
-            [{'coordinates' =>[2, 0], 'score' => 4.1}, 4.1],
-            [{'coordinates' =>[0, 2], 'score' => 4.1}, 4.1],
+            [[1, 1], 4.1],
+            [[2, 0], 4.1],
+            [[0, 2], 4.1],
           ]
         }
       }
