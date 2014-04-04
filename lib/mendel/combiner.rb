@@ -82,8 +82,7 @@ module Mendel
     end
 
     def queueable_item_for(coordinates)
-      # TODO - shouldn't this raise an exception?
-      return unless valid_for_lists?(coordinates, lists)
+      raise InvalidCoordinates, coordinates unless valid_for_lists?(coordinates, lists)
       score = score_combination(combo_at(coordinates))
       {COORDINATES => coordinates, SCORE => score}
     end
@@ -157,5 +156,7 @@ module Mendel
         self.load(JSON.parse(json))
       end
     end
+
+    InvalidCoordinates = Class.new(StandardError)
   end
 end
