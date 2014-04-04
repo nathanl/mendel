@@ -61,11 +61,15 @@ module Mendel
       tuple = priority_queue.pop
       return :none if tuple.nil?
       coordinates, score = tuple
-      children_coordinates = next_steps_from(coordinates)
-      children_coordinates.each {|cc| queue_combo_at(cc) }
+      queue_children_of(coordinates)
       notify(:returned, {COORDINATES => coordinates, SCORE => score})
       combo = combo_at(coordinates)
       [combo, score]
+    end
+
+    def queue_children_of(coordinates)
+      children_coordinates = next_steps_from(coordinates)
+      children_coordinates.each {|cc| queue_combo_at(cc) }
     end
 
     def queue_combo_at(coordinates)
