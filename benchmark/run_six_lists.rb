@@ -1,5 +1,5 @@
 require_relative 'benchmarker'
-require_relative 'basic_combiner'
+require_relative 'addition_combiner'
 
 chunk_size   = ENV.fetch('CS', 25)
 puts "Using chunk size #{chunk_size} - set ENV var CS to change"
@@ -13,5 +13,5 @@ lists = 6.times.map {
 # binding.pry
 # exit
 
-benchmarker = Mendel::Benchmarker.new(BasicCombiner.new(*lists), chunk_size)
+benchmarker = Mendel::Benchmarker.new(AdditionCombiner.new(*lists), chunk_size)
 benchmarker.go!

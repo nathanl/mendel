@@ -1,4 +1,4 @@
-class BasicCombiner
+class AdditionCombiner
   include Mendel::Combiner
   def score_combination(items)
     items.reduce(0) { |sum, item| sum += item }

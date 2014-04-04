@@ -1,6 +1,6 @@
 require "bundler/gem_tasks"
 require 'mendel'
-require_relative "benchmark/basic_combiner"
+require_relative "benchmark/addition_combiner"
 Bundler.setup
 
 desc "Open IRB to experiment with Mendel::Combiner"

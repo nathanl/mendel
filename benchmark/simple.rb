@@ -4,7 +4,7 @@
 
 require 'mendel'
 require 'time'
-require_relative 'basic_combiner'
+require_relative 'addition_combiner'
 
 list_count   = ENV.fetch('LIST_COUNT', 10).to_i
 list_length  = ENV.fetch('LIST_LENGTH', 200).to_i
@@ -12,6 +12,10 @@ result_count = ENV.fetch('RESULT_COUNT', 10_000).to_i
 
 puts "Pulling #{result_count} results from #{list_count} lists of #{list_length} each"
 puts "You may override with ENV vars LIST_COUNT, LIST_LENGTH, RESULT_COUNT"
+
+if result_count >= list_length**list_count
+  puts "***(You asked for #{result_count} results, but only #{list_length**list_count} are possible...)"
+end
 
 lists = list_count.times.map {
   # More than this eats a ton of memory
@@ -23,7 +27,7 @@ sleep(10)
 puts "about to do the work"
 start = Time.now
 GC.disable
-bc = BasicCombiner.new(*lists)
+bc = AdditionCombiner.new(*lists)
 bc.take(result_count)
 fin = Time.now
 puts "Took #{fin - start} seconds to pull #{result_count} combos"
