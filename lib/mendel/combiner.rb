@@ -58,29 +58,35 @@ module Mendel
     end
 
     def next_combination
-      item = priority_queue.pop
-      return :none if item.nil?
-      combo, score = item
-      children_coordinates = next_steps_from(combo.fetch(COORDINATES))
+      tuple = priority_queue.pop
+      return :none if tuple.nil?
+      item, score = tuple
+      children_coordinates = next_steps_from(item.fetch(COORDINATES))
       children_coordinates.each {|cc| queue_combo_at(cc) }
-      notify(:returned, combo)
-      [combo.fetch(ITEMS), score]
+      notify(:returned, item)
+      combo = combo_at(item.fetch(COORDINATES))
+      [combo, score]
     end
 
     def queue_combo_at(coordinates)
       return if seen_set.include?(coordinates)
       seen_set << coordinates
-      combo = combo_at(coordinates)
-      priority_queue.push(combo, combo.fetch(SCORE))
+      queue_item = queue_item_for(coordinates)
+      priority_queue.push(queue_item, queue_item.fetch(SCORE))
+    end
+
+    def queue_item_for(coordinates)
+      # TODO - shouldn't this raise an exception?
+      return unless valid_for_lists?(coordinates, lists)
+      score = score_combination(combo_at(coordinates))
+      {COORDINATES => coordinates, SCORE => score}.tap {|combo|
+        notify(:scored, combo)
+      }
     end
 
     def combo_at(coordinates)
-      return unless valid_for_lists?(coordinates, lists)
       items = lists.each_with_index.map {|list, i| list[coordinates[i]] }
-      combination = build_combination(items)
-      {ITEMS => combination, COORDINATES => coordinates, SCORE => score_combination(combination)}.tap {|combo|
-        notify(:scored, combo)
-      }
+      build_combination(items)
     end
 
     def build_combination(items)
@@ -133,7 +139,6 @@ module Mendel
     # To keep from allocating so many strings
     COORDINATES = 'coordinates'.freeze
     INPUT       = 'input'.freeze
-    ITEMS       = 'items'.freeze
     QUEUED      = 'queued'.freeze
     SCORE       = 'score'.freeze
     SEEN        = 'seen'.freeze

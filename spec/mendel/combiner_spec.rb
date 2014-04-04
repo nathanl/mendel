@@ -167,9 +167,9 @@ describe Mendel::Combiner do
         {
           'input' => [list1, list2], 'seen' => [[0, 0], [1, 0], [0, 1], [2, 0], [1, 1], [0, 2]],
           'queued' => [
-            [{'items' =>[2.0, 2.1], 'coordinates' =>[1, 1], 'score' => 4.1}, 4.1], 
-            [{'items' =>[3.0, 1.1], 'coordinates' =>[2, 0], 'score' => 4.1}, 4.1],
-            [{'items' =>[1.0, 3.1], 'coordinates' =>[0, 2], 'score' => 4.1}, 4.1],
+            [{'coordinates' =>[1, 1], 'score' => 4.1}, 4.1],
+            [{'coordinates' =>[2, 0], 'score' => 4.1}, 4.1],
+            [{'coordinates' =>[0, 2], 'score' => 4.1}, 4.1],
           ]
         }
       }
@@ -228,14 +228,12 @@ describe Mendel::Combiner do
         # 2 times because with two lists there are two child coordinates
         expect(combiner).to receive(:notify).exactly(2).times.with(
           :scored, a_hash_including(
-            'items'       => an_instance_of(Array),
             'coordinates' => an_instance_of(Array),
             'score'       => a_kind_of(Numeric)
           )
         )
         expect(combiner).to receive(:notify).exactly(1).times.with(
           :returned, a_hash_including(
-            'items'       => an_instance_of(Array),
             'coordinates' => an_instance_of(Array),
             'score'       => a_kind_of(Numeric)
           )
