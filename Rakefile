@@ -12,6 +12,7 @@ task :console do
   IRB.start
 end
 
+desc "See a visualization of the Mendel::Combiner algorithm"
 task :visualize do
   require 'irb'
   require "mendel/observable_combiner"

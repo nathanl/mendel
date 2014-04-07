@@ -54,8 +54,8 @@ describe Mendel::Visualizers::ASCII do
           expect(visualizer.grid_point_for(:unscored)).to eq('        ')
         end
 
-        it "represents :scored as a yellow number" do
-          expect(visualizer.grid_point_for(:scored, 5)).to eq('       5'.yellow)
+        it "represents :scored as a blue number" do
+          expect(visualizer.grid_point_for(:scored, 5)).to eq('       5'.blue)
         end
 
         it "represents :returned as a green number" do
