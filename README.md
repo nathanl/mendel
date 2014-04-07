@@ -10,7 +10,7 @@ Mendel gets much closer to that ideal than a brute force approach by incremental
 
 ## Usage
 
-Create a combiner class that knows how to score combinations of your items. Then provide sorted lists of items.
+Create a combiner class that knows how to score combinations of your items. Then provide lists of items, sorted in ascending value.
 
 For example:
 

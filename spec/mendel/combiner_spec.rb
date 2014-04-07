@@ -141,6 +141,18 @@ describe Mendel::Combiner do
 
     end
 
+    context "when the input lists are not sorted in ascending order" do
+
+      let(:list1) { EXAMPLE_INPUT[:incrementing_integers].reverse }
+      let(:list2) { EXAMPLE_INPUT[:incrementing_decimals].shuffle }
+
+      it "does not produce correct output" do
+        require "fixtures/example_output/inc_integers_w_inc_decimals"
+        expect(all_results).not_to be_sorted_like($inc_integers_w_inc_decimals)
+      end
+
+    end
+
   end
 
   describe "enumeration" do
@@ -219,7 +231,6 @@ describe Mendel::Combiner do
     end
 
   end
-
 
   describe "other methods" do
 
