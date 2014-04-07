@@ -11,6 +11,7 @@ module Mendel
 
     def pop_queue
       super.tap { |pair|
+        return if pair.nil?
         coords = pair[0].fetch('coordinates')
         notify(:returned, {'coordinates' => coords, 'score' => pair[1]}) unless pair.nil?
       }
