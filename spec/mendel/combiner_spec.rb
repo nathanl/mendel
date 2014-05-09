@@ -247,7 +247,7 @@ describe Mendel::Combiner do
     let(:list1) { [] }
     let(:list2) { [] }
 
-    it "does something sensible" do
+    it "raises an error" do
       expect{combiner}.to raise_error(Mendel::Combiner::EmptyList)
     end
 
