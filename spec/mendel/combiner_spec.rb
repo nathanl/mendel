@@ -242,4 +242,15 @@ describe Mendel::Combiner do
 
   end
 
+  describe "when given empty lists" do
+
+    let(:list1) { [] }
+    let(:list2) { [] }
+
+    it "does something sensible" do
+      expect{combiner}.to raise_error(Mendel::Combiner::EmptyList)
+    end
+
+  end
+
 end

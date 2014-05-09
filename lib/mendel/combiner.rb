@@ -15,6 +15,7 @@ module Mendel
     end
 
     def initialize(*lists)
+      raise EmptyList if lists.any?(&:empty?)
       self.lists          = lists
       self.priority_queue = MinPriorityQueue.new
       queue_combo_at(lists.map {0} )
@@ -162,5 +163,6 @@ module Mendel
     end
 
     InvalidCoordinates = Class.new(StandardError)
+    EmptyList          = Class.new(StandardError)
   end
 end
