@@ -76,7 +76,7 @@ If you need to apply other criteria besides the score, use lazy enumeration and 
 
 ## Serialization and deserialization
 
-Mendel::Combiner provides the instance methods `#dump` and `#dump_json` and the class methods `.load` and `.load_json`. This allows you to pause enumeration, save the data, and resume enumerating some time later.
+`Mendel::Combiner` provides the instance methods `#dump` and `#dump_json` and the class methods `.load` and `.load_json`. This allows you to pause enumeration, save the data, and resume enumerating some time later.
 
 ## Caveats
 
