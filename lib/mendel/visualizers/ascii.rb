@@ -36,8 +36,8 @@ module Mendel
       def grid_point_for(status, score=nil)
         case status
         when :unscored then fix_point_width('')
-        when :scored   then fix_point_width(score.to_s).blue
-        when :returned then fix_point_width(score.to_s).green
+        when :scored   then fix_point_width(score.to_s).green
+        when :returned then fix_point_width(score.to_s).blue
         else raise UnknownPointType, status.inspect
         end
       end
