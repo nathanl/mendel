@@ -1,12 +1,35 @@
 # Mendel
 
-Mendel breeds the best combinations of lists that you provide.
+Mendel breeds the best combinations of sorted lists that you provide.
 
-For example, suppose you have 100 shirts, 200 pairs of pants, and 50 hats, each with a price tag. How could you find the 50 cheapest outfits?
+For example, suppose you have 100 shirts, 200 pairs of pants, and 50 hats, ordered by price. How could you find the 50 cheapest outfits?
 
 A brute force approach would build all 1 million possibilities (100 * 200 * 50), sort by price, and take the best 50. An ideal solution would build the best 50 and stop.
 
-Mendel gets much closer to that ideal than a brute force approach by incrementally building candidates for the "next best" combination and using a priority queue to pull the best one at any given moment.
+Mendel gets much closer to the ideal by incrementally building candidates for the "next best" combination and using a priority queue to pull the best one at any given moment.
+
+## How it Works
+
+Mendel is easiest to explain for two lists. In that case, we can think of the combinations as a grid, where the X value is from the first list and the Y value is from the second. Inside the grid, we can represent combinations as the sum of the coordinate values.
+
+**The lists must be sorted by score**. This means that the sums will increase (or remain constant) along one or both axes. For example:
+
+     +---+    +---+    +---+    +---+
+    1|555|   1|567|   3|777|   3|789|
+    1|555|   1|567|   2|666|   2|678|
+    1|555|   1|567|   1|555|   1|567|
+     +---+    +---+    +---+    +---+
+      444      456      444      456 
+
+Imagine that these grids are landscapes, and the scores in the middle are elevations. **Mendel chooses combinations like a tide, rising from the bottom left.**
+
+In every case, we are guaranteed that the bottom left corner - the best item from list Y combined with the best item from list X - has the lowest elevation. Beyond that, the next best combination could be at `0,1` or `1,0`; we don't know. All we can do is check them both and choose the best one. "Check them both" means producing a score, and to "choose the best one", Mendel uses a [priority queue](https://en.wikipedia.org/wiki/Priority_queue).
+
+If we find that we've chosen `0,1`, before we return it, we add `1,1` and `0,2` to the queue. We don't know yet whether either of them is better than `1,0`, but next time we need a value, the priority queue will decide. So the water line continues to move up and to the right. Any coordinate on the water line is a combination that's currently in the priority queue, any coordinate "under water" has been returned, and any coordinate beyond the water line has not yet been scored.
+
+Run `rake visualize` to see this process in action.
+
+Mendel does the same process for combinations of 3 or more lists, too. Imagining a 6-dimensional graph is beyond the author's cognitive abilities, but in principle, it's the same.
 
 ## Usage
 

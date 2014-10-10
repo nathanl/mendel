@@ -108,9 +108,9 @@ module Mendel
     # All possible coordinates which are one greater than the given
     # coords in a single direction.
     # Eg:
-    # next_steps_from([0,0]) 
+    # increments_from([0,0]) 
     #   #=> [[0,1], [1, 0]]
-    # next_steps_from([10,5,7])
+    # increments_from([10,5,7])
     #   => [[11, 5, 7], [10, 6, 7], [10, 5, 8]]
     def increments_from(coordinates)
       coordinates.length.times.map { |i| coordinates.dup.tap { |c| c[i] += 1} }
