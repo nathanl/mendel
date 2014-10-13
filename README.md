@@ -55,6 +55,8 @@ nc = NumericCombiner.new(list1, list2)
 nc.take(50) # The 50 best combinations
 ```
 
+Mendel will return two-item arrays of `[combination, score]`.
+
 A combination of items is, by default, an array with one item from each list. However, if you like, you may specify how to build combinations of your items.
 
 ```ruby
@@ -94,7 +96,7 @@ pc.take(2) # The youngest teams
 If you need to apply other criteria besides the score, use lazy enumeration and chain other calls:
 
 ```ruby
-  pc.each.lazy.reject { |team| siblings?(team) }.take(50).to_a
+  pc.each.lazy.reject { |team, score| team.contains_siblings? }.take(50).to_a
 ```
 
 ## Serialization and deserialization
