@@ -44,7 +44,13 @@ module Mendel
 
     def score_combination(items)
       raise NotImplementedError,
-        "Including class must define. Take N items (one from each list) and produce a combined score"
+        <<-MESSAGE
+        Including class must define. Must take a combination and produce a score.
+          - If you have not defined `build_combination`, `score combination` will receive
+            an array of N items (one from each list)
+          - If you have defined `build_combination`, `score_combination` will receive
+            whatever `build_combination` returns
+        MESSAGE
     end
 
     private
