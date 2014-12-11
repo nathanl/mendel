@@ -24,6 +24,4 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake"
   spec.add_development_dependency "rspec",   "~> 3.0.0.beta2"
   spec.add_development_dependency "pry",     "~> 0.9"
-  spec.add_development_dependency "gruff",   "~> 0.5"
-  spec.add_development_dependency "colorize",           "~> 0.7.1"
 end
