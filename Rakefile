@@ -1,7 +1,12 @@
 require "bundler/gem_tasks"
 require 'mendel'
 require_relative "benchmark/addition_combiner"
+require 'rspec/core/rake_task'
 Bundler.setup
+
+RSpec::Core::RakeTask.new(:spec)
+
+task "default" => "spec"
 
 desc "Open IRB to experiment with Mendel::Combiner"
 task :console do
