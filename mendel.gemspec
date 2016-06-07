@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["nathanmlong@gmail.com"]
   spec.summary       = %q{Mendel breeds the best combinations of lists that you provide.}
   spec.description   = %q{Mendel breeds the best combinations of N lists without building all possible combinations.}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/nathanl/mendel"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
