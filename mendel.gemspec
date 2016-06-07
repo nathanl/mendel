@@ -22,6 +22,7 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "bundler", "~> 1.5"
   spec.add_development_dependency "rake"
-  spec.add_development_dependency "rspec",   "~> 3.3"
+  spec.add_development_dependency "rspec",   "~> 3.4"
   spec.add_development_dependency "pry",     "~> 0.10"
+  spec.add_development_dependency "colorize", "~> 0.7.7"
 end
