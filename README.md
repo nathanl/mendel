@@ -12,7 +12,9 @@ Mendel gets much closer to the ideal by incrementally building candidates for th
 
 Mendel is easiest to explain for two lists. In that case, we can think of the combinations as a grid, where the X value is from the first list and the Y value is from the second. Inside the grid, we can represent combinations as the sum of the coordinate values.
 
-**The lists must be sorted by score**. This means that the sums will increase (or remain constant) along one or both axes. For example:
+**The lists must be sorted by score**. This means that the sums will increase (or remain constant) along one or both axes.
+
+For example, imagine that these grids are landscapes, and the scores in the middle are elevations. **Mendel chooses combinations like a tide, rising from the bottom left.**
 
      +---+    +---+    +---+    +---+
     1|555|   1|567|   3|777|   3|789|
@@ -21,11 +23,9 @@ Mendel is easiest to explain for two lists. In that case, we can think of the co
      +---+    +---+    +---+    +---+
       444      456      444      456 
 
-Imagine that these grids are landscapes, and the scores in the middle are elevations. **Mendel chooses combinations like a tide, rising from the bottom left.**
-
 In every case, we are guaranteed that the bottom left corner - the best item from list Y combined with the best item from list X - has the lowest elevation. Beyond that, the next best combination could be at `0,1` or `1,0`; we don't know. All we can do is check them both and choose the best one. "Check them both" means producing a score, and to "choose the best one", Mendel uses a [priority queue](https://en.wikipedia.org/wiki/Priority_queue).
 
-If we find that we've chosen `0,1`, before we return it, we add `1,1` and `0,2` to the queue. We don't know yet whether either of them is better than `1,0`, but next time we need a value, the priority queue will decide. So the water line continues to move up and to the right. Any coordinate on the water line is a combination that's currently in the priority queue, any coordinate "under water" has been returned, and any coordinate beyond the water line has not yet been scored.
+If we find that we've chosen `0,1`, before we return it, we add `1,1` and `0,2` to the queue. We don't know yet whether either of them is better than `1,0`, but next time we need a value, the priority queue will decide. So the water line continues to move up and to the right. Any coordinate "under water" has been returned, any coordinate above the water line has not yet been scored, and any coordinate the water line is just touching is a combination that's currently in the priority queue, 
 
 Run `rake visualize` to see this process in action.
 
