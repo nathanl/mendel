@@ -110,9 +110,11 @@ If you need to apply other criteria besides the score, use lazy enumeration and 
 
 ## Installation
 
-In Bundler:
+    gem install mendel
 
-    gem 'mendel', git: (this repo address)
+Or in Bundler:
+
+    gem 'mendel'
 
 ## Naming
 
